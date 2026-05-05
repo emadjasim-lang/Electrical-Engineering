@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Interactive Electrical Engineering Lecture</title>
+<style>
+  :root{
+    --bg:#eef3f9;
+    --card:#ffffff;
+    --line:#d7e0ed;
+    --text:#12233d;
+    --muted:#5d6b81;
+    --nav:#143764;
+    --red:#d62828;
+    --blue:#1565c0;
+    --green:#2e7d32;
+    --orange:#ef6c00;
+    --purple:#6a1b9a;
+    --yellow:#f9a825;
+    --shadow:0 10px 26px rgba(10,30,60,0.08);
+    --radius:18px;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:linear-gradient(180deg,#edf3fa 0%, #f7f9fc 100%);
+    color:var(--text);
+  }
+
+  header{
+    background:linear-gradient(135deg,#102744,#173c69);
+    color:#fff;
+    padding:28px 18px;
+    box-shadow:var(--shadow);
+  }
+  header h1{
+    margin:0;
+    font-size:2rem;
+    text-align:center;
+  }
+  header p{
+    max-width:980px;
+    margin:10px auto 0;
+    text-align:center;
+    color:#dbe8ff;
+    line-height:1.6;
+  }
+
+  .wrap{
+    width:min(1200px,95%);
+    margin:22px auto 42px;
+  }
+
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:18px;
+  }
+
+  .tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  .tabs button{
+    border:none;
+    background:#fff;
+    color:var(--nav);
+    border-radius:999px;
+    padding:11px 16px;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:var(--shadow);
+  }
+
+  .tabs button.active{
+    background:var(--nav);
+    color:#fff;
+  }
+
+  .tool-btn{
+    border:none;
+    background:#fff;
+    color:var(--nav);
+    border-radius:999px;
+    padding:11px 16px;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:var(--shadow);
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+  }
+
+  .page{display:none}
+  .page.active{display:block}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    gap:16px;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:18px;
+    overflow:hidden;
+  }
+
+  .span-12{grid-column:span 12}
+  .span-8{grid-column:span 8}
+  .span-7{grid-column:span 7}
+  .span-6{grid-column:span 6}
+  .span-5{grid-column:span 5}
+  .span-4{grid-column:span 4}
+
+  @media(max-width:950px){
+    .span-8,.span-7,.span-6,.span-5,.span-4{grid-column:span 12}
+  }
+
+  .badge{
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:999px;
+    color:#fff;
+    font-size:0.85rem;
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  .red{background:var(--red)}
+  .blue{background:var(--blue)}
+  .green{background:var(--green)}
+  .orange{background:var(--orange)}
+  .purple{background:var(--purple)}
+
+  h2{
+    margin:0 0 10px;
+    color:#12345c;
+    font-size:1.42rem;
+  }
+
+  h3{
+    margin:0 0 10px;
+    font-size:1.08rem;
+    color:#17345f;
+  }
+
+  .sub{
+    color:var(--muted);
+    line-height:1.65;
+    margin:0;
+  }
+
+  ul.clean{
+    margin:10px 0 0;
+    padding-left:18px;
+    line-height:1.7;
+  }
+
+  .two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:12px;
+  }
+
+  @media(max-width:700px){
+    .two-col{grid-template-columns:1fr}
+  }
+
+  .mini{
+    border:1px solid var(--line);
+    background:#f8fbff;
+    border-radius:14px;
+    padding:12px;
+  }
+
+  .formula{
+    border:2px dashed #cfdaea;
+    background:#f8fbff;
+    border-radius:16px;
+    text-align:center;
+    font-size:2rem;
+    font-weight:800;
+    padding:16px;
+    letter-spacing:1px;
+    margin-top:10px;
+  }
+
+  .formula .v{color:var(--red)}
+  .formula .i{color:var(--blue)}
+  .formula .r{color:var(--green)}
+
+  .controls{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-top:14px;
+  }
+
+  @media(max-width:700px){
+    .controls{grid-template-columns:1fr}
+  }
+
+  .control label{
+    display:block;
+    font-weight:700;
+    margin-bottom:6px;
+    color:#24456d;
+  }
+
+  input[type="range"]{width:100%}
+
+  .results{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin-top:14px;
+  }
+
+  @media(max-width:700px){
+    .results{grid-template-columns:1fr}
+  }
+
+  .result{
+    background:#163a67;
+    color:#fff;
+    text-align:center;
+    border-radius:14px;
+    padding:12px;
+  }
+  .result small{
+    display:block;
+    color:#d9e7ff;
+    margin-bottom:5px;
+  }
+
+  .canvas-wrap{
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:#f6faff;
+    padding:10px;
+    overflow:auto;
+    margin-top:10px;
+  }
+
+  svg, canvas{
+    display:block;
+    width:100%;
+    height:auto;
+  }
+
+  .note{
+    margin-top:12px;
+    padding:12px 14px;
+    border-left:5px solid var(--yellow);
+    background:#fff7df;
+    border-radius:12px;
+    line-height:1.6;
+  }
+
+  .warning{
+    margin-top:12px;
+    padding:12px 14px;
+    border-left:5px solid var(--red);
+    background:#ffebee;
+    border-radius:12px;
+    line-height:1.6;
+  }
+
+  .success{
+    margin-top:12px;
+    padding:12px 14px;
+    border-left:5px solid var(--green);
+    background:#e8f5e9;
+    border-radius:12px;
+    line-height:1.6;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+    font-size:0.95rem;
+  }
+
+  th, td{
+    border:1px solid #cfdaea;
+    padding:10px;
+    text-align:left;
+    vertical-align:top;
+  }
+
+  th{
+    background:#edf4fc;
+    color:#163a67;
+  }
+
+  .step{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    margin-bottom:12px;
+  }
+
+  .step .num{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:#163a67;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:700;
+    flex-shrink:0;
+  }
+
+  .quiz-options{
+    display:grid;
+    gap:10px;
+    margin-top:12px;
+  }
+
+  .quiz-options button{
+    text-align:left;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid #cfdaea;
+    background:#fff;
+    cursor:pointer;
+    font-weight:700;
+  }
+
+  .quiz-feedback{
+    display:none;
+    margin-top:12px;
+    padding:12px 14px;
+    border-radius:12px;
+  }
+  .quiz-feedback.show{display:block}
+  .quiz-feedback.good{background:#e8f5e9;color:#1b5e20}
+  .quiz-feedback.bad{background:#ffebee;color:#b71c1c}
+
+  .footer{
+    text-align:center;
+    color:var(--muted);
+    margin-top:26px;
+    font-size:0.92rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Interactive Electrical Engineering Lecture</h1>
+  <p>
+    This corrected version keeps the subpages and redraws the circuit pictures properly.
+    It covers voltage and current, measuring DC current, AC/DC current, and AC/DC voltage.
+  </p>
+</header>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="tabs">
+      <button class="tab-btn active" data-page="page1">1. Voltage & Current</button>
+      <button class="tab-btn" data-page="page2">2. Measuring DC Current</button>
+      <button class="tab-btn" data-page="page3">3. AC vs DC Current</button>
+      <button class="tab-btn" data-page="page4">4. AC vs DC Voltage</button>
+      <button class="tab-btn" data-page="page5">5. Quiz</button>
+    </div>
+    <a class="tool-btn" href="2.html">Click Here for Power Factor Page</a>
+  </div>
+
+  <!-- PAGE 1 -->
+  <section id="page1" class="page active">
+    <div class="grid">
+      <div class="card span-6">
+        <span class="badge red">Voltage</span>
+        <h2>What is Voltage?</h2>
+        <p class="sub">Voltage is the electrical pressure that pushes charge through a circuit.</p>
+        <ul class="clean">
+          <li><strong>Unit:</strong> Volt (V)</li>
+          <li><strong>Symbol:</strong> V</li>
+          <li><strong>Measured by:</strong> Voltmeter</li>
+          <li><strong>Voltmeter connection:</strong> Parallel</li>
+          <li><strong>Examples:</strong> 1.5 V cell, 12 V battery, 24 V battery</li>
+        </ul>
+      </div>
+
+      <div class="card span-6">
+        <span class="badge blue">Current</span>
+        <h2>What is Current?</h2>
+        <p class="sub">Current is the flow of electric charge through a conductor.</p>
+        <ul class="clean">
+          <li><strong>Unit:</strong> Ampere (A)</li>
+          <li><strong>Symbol:</strong> I</li>
+          <li><strong>Measured by:</strong> Ammeter</li>
+          <li><strong>Ammeter connection:</strong> Series</li>
+          <li><strong>Examples:</strong> fan current, motor current, charger current</li>
+        </ul>
+      </div>
+
+      <div class="card span-7">
+        <span class="badge green">Easy Analogy</span>
+        <h2>Water Pipe Analogy</h2>
+        <p class="sub">
+          Voltage is like water pressure, and current is like water flow. A greater pressure causes more flow.
+        </p>
+        <div class="canvas-wrap">
+          <svg viewBox="0 0 700 240" aria-label="Water analogy">
+            <rect x="0" y="0" width="700" height="240" fill="#f6faff"/>
+            <text x="28" y="30" fill="#d62828" font-size="22" font-weight="700">High Pressure = High Voltage</text>
+            <text x="475" y="30" fill="#1565c0" font-size="22" font-weight="700">Water Flow = Current</text>
+
+            <rect x="46" y="72" width="74" height="60" rx="10" fill="#cfd8dc" stroke="#607d8b" stroke-width="3"/>
+            <rect x="76" y="50" width="14" height="22" fill="#ef5350"/>
+            <rect x="62" y="38" width="42" height="12" rx="6" fill="#ef5350"/>
+
+            <rect x="120" y="90" width="360" height="22" rx="10" fill="#dbe6f1" stroke="#607d8b" stroke-width="4"/>
+            <rect x="140" y="95" width="310" height="12" rx="6" fill="#64b5f6">
+              <animate attributeName="x" values="140;155;140" dur="1.6s" repeatCount="indefinite"/>
+            </rect>
+
+            <path d="M480 101 C530 101, 560 101, 560 140 V165" fill="none" stroke="#607d8b" stroke-width="14" stroke-linecap="round"/>
+            <path d="M560 165 V205" fill="none" stroke="#42a5f5" stroke-width="10" stroke-linecap="round" stroke-dasharray="10 8">
+              <animate attributeName="stroke-dashoffset" values="0;-36" dur="1s" repeatCount="indefinite"/>
+            </path>
+            <circle cx="550" cy="188" r="4" fill="#42a5f5">
+              <animate attributeName="cy" values="188;220" dur="0.9s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="1;0" dur="0.9s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="570" cy="196" r="4" fill="#42a5f5">
+              <animate attributeName="cy" values="196;226" dur="1.0s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="1;0" dur="1.0s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+        </div>
+      </div>
+
+      <div class="card span-5">
+        <span class="badge purple">Important Formula</span>
+        <h2>Ohm’s Law</h2>
+        <div class="formula"><span class="v">V</span> = <span class="i">I</span><span class="r">R</span></div>
+
+        <div class="two-col">
+          <div class="mini"><strong style="color:#d62828">V</strong> = Voltage (Volt)</div>
+          <div class="mini"><strong style="color:#1565c0">I</strong> = Current (Ampere)</div>
+          <div class="mini"><strong style="color:#2e7d32">R</strong> = Resistance (Ohm)</div>
+          <div class="mini">More voltage or less resistance gives more current.</div>
+        </div>
+
+        <div class="controls">
+          <div class="control">
+            <label for="vRange">Voltage: <span id="vText">12</span> V</label>
+            <input id="vRange" type="range" min="1" max="48" value="12">
+          </div>
+          <div class="control">
+            <label for="rRange">Resistance: <span id="rText">6</span> Ω</label>
+            <input id="rRange" type="range" min="1" max="30" value="6">
+          </div>
+        </div>
+
+        <div class="results">
+          <div class="result"><small>Current</small><span id="iResult">2.00 A</span></div>
+          <div class="result"><small>Power</small><span id="pResult">24.00 W</span></div>
+          <div class="result"><small>Rule</small>V / R</div>
+        </div>
+      </div>
+
+      <div class="card span-12">
+        <span class="badge orange">Correct Circuit</span>
+        <h2>Simple DC Circuit</h2>
+        <p class="sub">Battery, conductor, resistor, current direction, and voltage across the load are clearly shown below.</p>
+        <div class="canvas-wrap">
+          <svg id="simpleCircuit" viewBox="0 0 980 370" aria-label="Simple DC circuit">
+            <rect x="0" y="0" width="980" height="370" fill="#f6faff"/>
+
+            <!-- battery -->
+            <rect x="70" y="95" width="60" height="145" rx="12" fill="#081a38"/>
+            <rect x="98" y="112" width="18" height="112" fill="#ef4444"/>
+            <rect x="80" y="112" width="14" height="112" fill="#ffffff"/>
+            <text x="43" y="110" fill="#ef4444" font-size="34" font-weight="700">+</text>
+            <text x="48" y="260" fill="#111827" font-size="34" font-weight="700">−</text>
+            <text x="16" y="190" fill="#103b70" font-size="22" font-weight="700">Battery</text>
+
+            <!-- complete wire path -->
+            <path d="M130 125 H790" stroke="#111827" stroke-width="9" fill="none" stroke-linecap="round"/>
+            <path d="M790 125 V255" stroke="#111827" stroke-width="9" fill="none" stroke-linecap="round"/>
+            <path d="M790 255 H130" stroke="#111827" stroke-width="9" fill="none" stroke-linecap="round"/>
+            <path d="M130 255 V220" stroke="#111827" stroke-width="9" fill="none" stroke-linecap="round"/>
+
+            <!-- resistor -->
+            <polyline points="790,125 765,142 815,161 765,180 815,199 765,218 815,237 790,255"
+              fill="none" stroke="#111827" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+            <text x="860" y="183" fill="#000" font-size="34" font-weight="700">R</text>
+            <text x="842" y="215" fill="#2e7d32" font-size="22" font-weight="700">Load</text>
+
+            <!-- current arrow -->
+            <line x1="425" y1="125" x2="555" y2="125" stroke="#1565c0" stroke-width="6"/>
+            <polygon points="555,125 526,108 526,142" fill="#1565c0"/>
+            <text x="487" y="76" fill="#1565c0" font-size="34" font-weight="700">I</text>
+
+            <!-- charge dots -->
+            <circle r="8" fill="#75a9ff">
+              <animateMotion dur="4s" repeatCount="indefinite" path="M160 125 H760 V255 H160 V220"/>
+            </circle>
+            <circle r="8" fill="#75a9ff">
+              <animateMotion dur="4s" begin="0.5s" repeatCount="indefinite" path="M160 125 H760 V255 H160 V220"/>
+            </circle>
+            <circle r="8" fill="#75a9ff">
+              <animateMotion dur="4s" begin="2s" repeatCount="indefinite" path="M160 125 H760 V255 H160 V220"/>
+            </circle>
+            <circle r="8" fill="#75a9ff">
+              <animateMotion dur="4s" begin="3s" repeatCount="indefinite" path="M160 125 H760 V255 H160 V220"/>
+            </circle>
+             <circle r="8" fill="#75a9ff">
+              <animateMotion dur="4s" begin="3s" repeatCount="indefinite" path="M160 125 H760 V255 H160 V220"/>
+            </circle>
+
+            <!-- voltage arrow -->
+            <line x1="180" y1="315" x2="720" y2="315" stroke="#e53935" stroke-width="5"/>
+            <polygon points="180,315 205,302 205,328" fill="#e53935"/>
+            <polygon points="720,315 695,302 695,328" fill="#e53935"/>
+            <text x="448" y="352" fill="#e53935" font-size="34" font-weight="700">V</text>
+            <text x="307" y="292" fill="#e53935" font-size="18" font-weight="700">Voltage across the circuit / load</text>
+          </svg>
+        </div>
+        <div class="note">
+          <strong>Teaching note:</strong> The blue moving dots are only a visual aid to show current in the closed path.
+        </div>
+      </div>
+
+      <div class="card span-12">
+        <h2>Difference Between Voltage and Current</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Voltage</th>
+              <th>Current</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Meaning</td><td>Electrical pressure</td><td>Flow of charge</td></tr>
+            <tr><td>Unit</td><td>Volt (V)</td><td>Ampere (A)</td></tr>
+            <tr><td>Symbol</td><td>V</td><td>I</td></tr>
+            <tr><td>Measured by</td><td>Voltmeter</td><td>Ammeter</td></tr>
+            <tr><td>Connection</td><td>Parallel</td><td>Series</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 2 -->
+  <section id="page2" class="page">
+    <div class="grid">
+      <div class="card span-7">
+        <span class="badge green">Practical Skill</span>
+        <h2>How to Measure DC Current</h2>
+        <p class="sub">The procedure below follows the uploaded lecture content and keeps the connections correct.</p>
+
+        <div class="step">
+          <div class="num">1</div>
+          <div><strong>Select DC current range.</strong><br><span class="sub">Turn the multimeter dial to the DC ampere range.</span></div>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <div><strong>Insert probes correctly.</strong><br><span class="sub">Black probe to COM. Red probe to A or mA depending on the expected current.</span></div>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <div><strong>Break the circuit.</strong><br><span class="sub">Open the circuit at the measurement point.</span></div>
+        </div>
+        <div class="step">
+          <div class="num">4</div>
+          <div><strong>Connect the meter in series.</strong><br><span class="sub">All current through the load must pass through the meter.</span></div>
+        </div>
+        <div class="step">
+          <div class="num">5</div>
+          <div><strong>Switch on the supply and read the value.</strong></div>
+        </div>
+
+        <div class="warning">
+          <strong>Important:</strong> Never connect an ammeter directly across the supply.
+        </div>
+      </div>
+
+      <div class="card span-5">
+        <span class="badge purple">Meter Terminals</span>
+        <h2>Typical Multimeter Inputs</h2>
+        <table>
+          <thead>
+            <tr><th>Terminal</th><th>Use</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>10A</td><td>High current</td></tr>
+            <tr><td>mA</td><td>Low current</td></tr>
+            <tr><td>COM</td><td>Black probe</td></tr>
+            <tr><td>VΩ</td><td>Voltage and resistance</td></tr>
+          </tbody>
+        </table>
+        <div class="success">
+          <strong>Correct order:</strong><br>
+          Battery (+) → Ammeter / Multimeter → Load → Battery (−)
+        </div>
+      </div>
+
+      <div class="card span-6">
+        <span class="badge blue">Correct Method</span>
+        <h2>Ammeter in Series</h2>
+        <div class="canvas-wrap">
+          <svg viewBox="0 0 760 300" aria-label="Correct ammeter in series">
+            <rect x="0" y="0" width="760" height="300" fill="#f6faff"/>
+
+            <!-- battery -->
+            <rect x="62" y="82" width="50" height="108" rx="10" fill="#081a38"/>
+            <rect x="85" y="96" width="15" height="38" fill="#ef4444"/>
+            <text x="40" y="96" fill="#ef4444" font-size="28" font-weight="700">+</text>
+            <text x="44" y="206" fill="#111827" font-size="28" font-weight="700">−</text>
+
+            <!-- series wire and ammeter -->
+            <path d="M110 110 H233" stroke="#111827" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <path d="M315 110 H555" stroke="#111827" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <circle cx="275" cy="110" r="35" fill="#fff" stroke="#2e7d32" stroke-width="6"/>
+            <text x="262" y="122" fill="#2e7d32" font-size="34" font-weight="700">A</text>
+
+            <!-- load -->
+            <polyline points="555,110 532,128 578,146 532,164 578,182 555,200"
+              fill="none" stroke="#111827" stroke-width="8" stroke-linejoin="round"/>
+            <text x="600" y="162" fill="#000" font-size="28" font-weight="700">Load</text>
+
+            <!-- return path -->
+            <path d="M555 200 H112 V190" stroke="#111827" stroke-width="8" fill="none" stroke-linecap="round"/>
+
+            <!-- arrow -->
+            <line x1="166" y1="110" x2="210" y2="110" stroke="#1565c0" stroke-width="5"/>
+            <polygon points="210,110 191,99 191,121" fill="#1565c0"/>
+            <text x="173" y="82" fill="#1565c0" font-size="24" font-weight="700">I</text>
+
+            <!-- label -->
+            <text x="20" y="34" fill="#2e7d32" font-size="24" font-weight="700">Correct: current meter in series</text>
+          </svg>
+        </div>
+        <div class="success">The ammeter is part of the same path as the load, so the load current passes through the meter.</div>
+      </div>
+
+      <div class="card span-6">
+        <span class="badge red">Incorrect Method</span>
+        <h2>Ammeter in Parallel</h2>
+        <div class="canvas-wrap">
+          <svg viewBox="0 0 760 300" aria-label="Incorrect ammeter in parallel">
+            <rect x="0" y="0" width="760" height="300" fill="#fff7f7"/>
+
+            <!-- battery -->
+            <rect x="62" y="82" width="50" height="108" rx="10" fill="#081a38"/>
+            <rect x="85" y="96" width="15" height="38" fill="#ef4444"/>
+            <text x="40" y="96" fill="#ef4444" font-size="28" font-weight="700">+</text>
+            <text x="44" y="206" fill="#111827" font-size="28" font-weight="700">−</text>
+
+            <!-- main path -->
+            <path d="M112 110 H490" stroke="#111827" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <path d="M490 110 V195 H112 V190" stroke="#111827" stroke-width="8" fill="none" stroke-linecap="round"/>
+
+            <!-- incorrect parallel branch -->
+            <path d="M490 110 H620 V190 H490" stroke="#d62828" stroke-width="6" fill="none" stroke-dasharray="12 8"/>
+            <circle cx="620" cy="150" r="33" fill="#fff" stroke="#d62828" stroke-width="6"/>
+            <text x="608" y="162" fill="#d62828" font-size="32" font-weight="700">A</text>
+
+            <text x="22" y="34" fill="#d62828" font-size="24" font-weight="700">Incorrect connection</text>
+            <text x="210" y="252" fill="#d62828" font-size="22" font-weight="700">This can short-circuit the source</text>
+          </svg>
+        </div>
+        <div class="warning">This is wrong because the ammeter has very low resistance and must not be connected in parallel.</div>
+      </div>
+
+      <div class="card span-12">
+        <span class="badge orange">Clamp Meter</span>
+        <h2>Clamp Meter Method</h2>
+        <p class="sub">Some clamp meters can also measure DC current. Clamp only one conductor at a time.</p>
+        <div class="canvas-wrap">
+          <svg viewBox="0 0 560 220" aria-label="Clamp meter method">
+            <rect x="0" y="0" width="560" height="220" fill="#f6faff"/>
+            <line x1="380" y1="25" x2="380" y2="190" stroke="#111827" stroke-width="8"/>
+            <text x="395" y="46" fill="#ef4444" font-size="24" font-weight="700">+</text>
+            <text x="395" y="180" fill="#111827" font-size="24" font-weight="700">−</text>
+
+            <path d="M160 75 C160 24, 244 24, 244 75" fill="none" stroke="#e53935" stroke-width="22" stroke-linecap="round"/>
+            <rect x="150" y="73" width="104" height="110" rx="16" fill="#1f2d3d"/>
+            <rect x="170" y="98" width="64" height="28" rx="4" fill="#d4f7d4"/>
+            <text x="184" y="117" font-size="20" font-weight="700">2.35</text>
+
+            <text x="66" y="205" fill="#2e7d32" font-size="22" font-weight="700">Clamp one conductor only</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 3 -->
+  <section id="page3" class="page">
+    <div class="grid">
+      <div class="card span-6">
+        <span class="badge red">AC Current</span>
+        <h2>Alternating Current</h2>
+        <ul class="clean">
+          <li>Current changes magnitude and direction continuously with time.</li>
+          <li>It is commonly represented by a sine wave.</li>
+          <li>Typical frequency: 50 Hz or 60 Hz.</li>
+          <li>Sources: alternator and generator.</li>
+          <li>Examples: home supply, grid, industrial power.</li>
+        </ul>
+        <div class="canvas-wrap">
+          <canvas id="acCurrentCanvas" width="560" height="220"></canvas>
+        </div>
+      </div>
+
+      <div class="card span-6">
+        <span class="badge blue">DC Current</span>
+        <h2>Direct Current</h2>
+        <ul class="clean">
+          <li>Current flows in one direction only.</li>
+          <li>Magnitude remains constant in steady DC.</li>
+          <li>Frequency is 0 Hz.</li>
+          <li>Sources: battery, DC supply, solar cell.</li>
+          <li>Examples: battery systems, chargers, electronics, DC drives.</li>
+        </ul>
+        <div class="canvas-wrap">
+          <canvas id="dcCurrentCanvas" width="560" height="220"></canvas>
+        </div>
+      </div>
+
+      <div class="card span-12">
+        <h2>AC Current vs DC Current</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>AC Current</th>
+              <th>DC Current</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Direction</td><td>Changes periodically</td><td>One direction only</td></tr>
+            <tr><td>Magnitude</td><td>Changes with time</td><td>Remains constant</td></tr>
+            <tr><td>Frequency</td><td>50 Hz / 60 Hz</td><td>0 Hz</td></tr>
+            <tr><td>Waveform</td><td>Sine wave</td><td>Straight line</td></tr>
+            <tr><td>Source</td><td>Alternator / generator</td><td>Battery / DC supply / solar cell</td></tr>
+            <tr><td>Transmission</td><td>Easy over long distance</td><td>More difficult over long distance</td></tr>
+            <tr><td>Examples</td><td>Home supply, industries, grid</td><td>Electronics, PLC, battery systems, EV</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card span-6">
+        <span class="badge orange">Power Formula</span>
+        <h2>Important Formulae</h2>
+        <div class="two-col">
+          <div class="mini">
+            <strong style="color:#d62828">AC Power</strong>
+            <div style="font-size:1.6rem;font-weight:800;margin-top:8px;">P = V I cos φ</div>
+            <p class="sub">φ is the phase angle and cos φ is the power factor.</p>
+          </div>
+          <div class="mini">
+            <strong style="color:#1565c0">DC Power</strong>
+            <div style="font-size:1.6rem;font-weight:800;margin-top:8px;">P = V I</div>
+            <p class="sub">For steady DC, voltage and current are constant.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card span-6">
+        <span class="badge green">Applications</span>
+        <h2>Applications</h2>
+        <div class="two-col">
+          <div class="mini">
+            <strong style="color:#d62828">Applications of AC</strong>
+            <ul class="clean">
+              <li>Home wiring</li>
+              <li>Motors</li>
+              <li>Transformers</li>
+              <li>Industrial machines</li>
+              <li>Power distribution</li>
+            </ul>
+          </div>
+          <div class="mini">
+            <strong style="color:#1565c0">Applications of DC</strong>
+            <ul class="clean">
+              <li>Electronics</li>
+              <li>Battery charging</li>
+              <li>PLC systems</li>
+              <li>Solar systems</li>
+              <li>Mobile devices</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 4 -->
+  <section id="page4" class="page">
+    <div class="grid">
+      <div class="card span-6">
+        <span class="badge red">AC Voltage</span>
+        <h2>Alternating Voltage</h2>
+        <ul class="clean">
+          <li>Voltage changes magnitude and polarity with time.</li>
+          <li>It is commonly a sine wave.</li>
+          <li>Frequency is usually 50 Hz or 60 Hz.</li>
+          <li>Sources: alternator, generator, mains.</li>
+          <li>Examples: home supply, industrial supply, generator output.</li>
+        </ul>
+        <div class="canvas-wrap">
+          <canvas id="acVoltageCanvas" width="560" height="220"></canvas>
+        </div>
+      </div>
+
+      <div class="card span-6">
+        <span class="badge blue">DC Voltage</span>
+        <h2>Direct Voltage</h2>
+        <ul class="clean">
+          <li>Voltage has a constant polarity.</li>
+          <li>Magnitude remains constant in steady DC.</li>
+          <li>Frequency is 0 Hz.</li>
+          <li>Sources: battery, DC supply, solar panel.</li>
+          <li>Examples: 5 V charger, 12 V battery, UPS battery.</li>
+        </ul>
+        <div class="canvas-wrap">
+          <canvas id="dcVoltageCanvas" width="560" height="220"></canvas>
+        </div>
+      </div>
+
+      <div class="card span-12">
+        <h2>AC Voltage vs DC Voltage</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>AC Voltage</th>
+              <th>DC Voltage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Direction / Polarity</td><td>Changes periodically</td><td>Constant polarity</td></tr>
+            <tr><td>Magnitude</td><td>Changes with time</td><td>Remains constant</td></tr>
+            <tr><td>Frequency</td><td>50 Hz / 60 Hz</td><td>0 Hz</td></tr>
+            <tr><td>Waveform</td><td>Sine wave</td><td>Straight line</td></tr>
+            <tr><td>Source</td><td>Alternator, generator, mains</td><td>Battery, DC supply, solar cell</td></tr>
+            <tr><td>Transmission</td><td>Easy and economical</td><td>More difficult in this simplified comparison</td></tr>
+            <tr><td>Examples</td><td>Home supply, industries</td><td>Battery systems, electronics, UPS</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card span-6">
+        <span class="badge green">Measuring Instruments</span>
+        <h2>Common Instruments</h2>
+        <ul class="clean">
+          <li><strong>Multimeter:</strong> measures voltage, current, resistance, and more.</li>
+          <li><strong>Voltmeter:</strong> measures voltage in parallel.</li>
+          <li><strong>Ammeter:</strong> measures current in series.</li>
+          <li><strong>Clamp meter:</strong> measures current without breaking the circuit.</li>
+        </ul>
+      </div>
+
+      <div class="card span-6">
+        <span class="badge orange">Safety Tips</span>
+        <h2>Safety</h2>
+        <ul class="clean">
+          <li>Use the correct meter range.</li>
+          <li>Never touch live wires or terminals.</li>
+          <li>Check polarity in DC circuits.</li>
+          <li>Use insulated tools and safety equipment.</li>
+          <li>Follow all electrical safety rules.</li>
+        </ul>
+        <div class="warning">Incorrect connections may damage instruments or cause injury.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 5 -->
+  <section id="page5" class="page">
+    <div class="grid">
+      <div class="card span-8">
+        <span class="badge purple">Student Check</span>
+        <h2>Quick Quiz</h2>
+
+        <div style="margin-bottom:24px;">
+          <h3>Q1. Where should an ammeter be connected when measuring current?</h3>
+          <div class="quiz-options" data-correct="series">
+            <button data-value="parallel">A. In parallel with the load</button>
+            <button data-value="series">B. In series with the load</button>
+            <button data-value="across">C. Directly across the source</button>
+            <button data-value="anywhere">D. Anywhere in the circuit</button>
+          </div>
+          <div class="quiz-feedback" id="fb1"></div>
+        </div>
+
+        <div style="margin-bottom:24px;">
+          <h3>Q2. Which statement is true for DC current?</h3>
+          <div class="quiz-options" data-correct="one">
+            <button data-value="changes">A. It changes direction periodically</button>
+            <button data-value="one">B. It flows in one direction only</button>
+            <button data-value="sine">C. It is always a sine wave</button>
+            <button data-value="fifty">D. It has a frequency of 50 Hz</button>
+          </div>
+          <div class="quiz-feedback" id="fb2"></div>
+        </div>
+
+        <div>
+          <h3>Q3. Which is Ohm’s Law?</h3>
+          <div class="quiz-options" data-correct="vir">
+            <button data-value="pvi">A. P = V I</button>
+            <button data-value="vir">B. V = I R</button>
+            <button data-value="pf">C. P = V I cos φ</button>
+            <button data-value="f1t">D. f = 1/T</button>
+          </div>
+          <div class="quiz-feedback" id="fb3"></div>
+        </div>
+      </div>
+
+      <div class="card span-4">
+        <span class="badge green">Memory Tips</span>
+        <h2>Revision Summary</h2>
+        <ul class="clean">
+          <li><strong>V</strong> pushes</li>
+          <li><strong>I</strong> flows</li>
+          <li><strong>R</strong> resists</li>
+          <li>Ammeter → <strong>series</strong></li>
+          <li>Voltmeter → <strong>parallel</strong></li>
+          <li>AC changes with time</li>
+          <li>DC is steady in one direction</li>
+        </ul>
+        <div class="note">
+          <strong>Remember:</strong> Voltage provides the push, current is the flow, and resistance opposes the flow.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    Corrected lecture page with subpages and corrected circuit drawings.
+  </div>
+</div>
+
+<script>
+  // tabs
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const pages = document.querySelectorAll('.page');
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabButtons.forEach(b => b.classList.remove('active'));
+      pages.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.page).classList.add('active');
+    });
+  });
+
+  // Ohm's law
+  const vRange = document.getElementById('vRange');
+  const rRange = document.getElementById('rRange');
+  const vText = document.getElementById('vText');
+  const rText = document.getElementById('rText');
+  const iResult = document.getElementById('iResult');
+  const pResult = document.getElementById('pResult');
+
+  function updateOhm(){
+    const V = Number(vRange.value);
+    const R = Number(rRange.value);
+    const I = V / R;
+    const P = V * I;
+    vText.textContent = V;
+    rText.textContent = R;
+    iResult.textContent = I.toFixed(2) + ' A';
+    pResult.textContent = P.toFixed(2) + ' W';
+  }
+  vRange.addEventListener('input', updateOhm);
+  rRange.addEventListener('input', updateOhm);
+  updateOhm();
+
+  // waveform drawing
+  function drawAxes(ctx, w, h, yMid, label){
+    ctx.clearRect(0,0,w,h);
+    ctx.fillStyle = '#f6faff';
+    ctx.fillRect(0,0,w,h);
+
+    ctx.strokeStyle = '#111827';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(45, yMid);
+    ctx.lineTo(w-18, yMid);
+    ctx.moveTo(55, h-18);
+    ctx.lineTo(55, 20);
+    ctx.stroke();
+
+    ctx.fillStyle = '#111827';
+    ctx.font = '16px Arial';
+    ctx.fillText(label, 22, 32);
+    ctx.fillText('0', 32, yMid + 16);
+    ctx.fillText('t', w - 15, yMid + 16);
+  }
+
+  function animateSine(canvasId, color, label, topText, bottomText){
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+    let phase = 0;
+
+    function frame(){
+      const w = canvas.width, h = canvas.height;
+      const yMid = h / 2;
+      drawAxes(ctx, w, h, yMid, label);
+
+      ctx.setLineDash([6,6]);
+      ctx.strokeStyle = '#9db2cf';
+      ctx.beginPath();
+      ctx.moveTo(55, yMid - 60);
+      ctx.lineTo(w - 20, yMid - 60);
+      ctx.moveTo(55, yMid + 60);
+      ctx.lineTo(w - 20, yMid + 60);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#173a67';
+      ctx.font = '15px Arial';
+      ctx.fillText(topText, 8, yMid - 56);
+      ctx.fillText(bottomText, 8, yMid + 66);
+
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for(let x = 55; x < w - 20; x++){
+        const y = yMid - 60 * Math.sin((x / 58) + phase);
+        if(x === 55) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = '#173a67';
+      ctx.fillText('One cycle / repeating waveform', 180, 22);
+
+      phase += 0.05;
+      requestAnimationFrame(frame);
+    }
+    frame();
+  }
+
+  function animateDC(canvasId, color, label, info){
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+    let glow = 0;
+
+    function frame(){
+      const w = canvas.width, h = canvas.height;
+      const yMid = h / 2;
+      drawAxes(ctx, w, h, yMid, label);
+
+      const y = yMid - 55;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 4 + Math.sin(glow) * 0.3;
+      ctx.beginPath();
+      ctx.moveTo(55, y);
+      ctx.lineTo(w - 20, y);
+      ctx.stroke();
+
+      ctx.fillStyle = '#173a67';
+      ctx.font = '16px Arial';
+      ctx.fillText(info, 180, 22);
+
+      glow += 0.06;
+      requestAnimationFrame(frame);
+    }
+    frame();
+  }
+
+  animateSine('acCurrentCanvas', '#d62828', 'I', '+Im', '−Im');
+  animateDC('dcCurrentCanvas', '#1565c0', 'I', 'Constant DC current');
+  animateSine('acVoltageCanvas', '#d62828', 'V', '+Vm', '−Vm');
+  animateDC('dcVoltageCanvas', '#1565c0', 'V', 'Constant DC voltage');
+
+  // quiz
+  const quizGroups = document.querySelectorAll('.quiz-options');
+  const feedbacks = [
+    document.getElementById('fb1'),
+    document.getElementById('fb2'),
+    document.getElementById('fb3')
+  ];
+
+  quizGroups.forEach((group, index) => {
+    const correct = group.dataset.correct;
+    group.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = btn.dataset.value;
+        const fb = feedbacks[index];
+        if(val === correct){
+          fb.className = 'quiz-feedback show good';
+          if(index === 0) fb.textContent = 'Correct. The ammeter must be connected in series.';
+          if(index === 1) fb.textContent = 'Correct. DC current flows in one direction only.';
+          if(index === 2) fb.textContent = 'Correct. Ohm’s Law is V = I R.';
+        } else {
+          fb.className = 'quiz-feedback show bad';
+          fb.textContent = 'Not correct. Please try again.';
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>
