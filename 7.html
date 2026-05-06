@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page 3 | Three-Phase Power Calculations</title>
+  <style>
+    :root{--navy:#0f2747;--blue:#1f6feb;--bg:#f5f8fc;--card:#fff;--line:#d6dfeb;--text:#1f2937;--shadow:0 12px 30px rgba(15,39,71,.08);--good:#1f7a3f}
+    *{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+    header{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:26px 7vw 22px} nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:10px 7vw;display:flex;flex-wrap:wrap;gap:10px;z-index:10}
+    nav a{display:inline-flex;text-decoration:none;color:#174ea6;background:#f5f9ff;border:1px solid #cadeff;border-radius:999px;padding:8px 12px;font-weight:700}
+    main{width:min(1180px,92vw);margin:24px auto 64px}.card{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:24px;margin:18px 0}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.triple{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.mini{padding:16px;border:1px solid var(--line);border-radius:18px;background:#fbfdff}
+    .formula{background:#101828;color:#fff;padding:14px 16px;border-radius:14px;font-family:"Courier New",monospace;overflow:auto;white-space:pre-line}
+    .note{background:#edf6ff;border-left:5px solid var(--blue);padding:12px 14px;border-radius:12px}.ok{background:#ecfbf0;border-left:5px solid var(--good);padding:12px 14px;border-radius:12px}
+    label{display:block;font-weight:700;margin:12px 0 6px} input{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px}.result{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}.box{padding:12px;background:#f8fbff;border:1px solid var(--line);border-radius:14px}
+    .btn{border:none;background:var(--blue);color:#fff;padding:11px 14px;border-radius:12px;font-weight:700;cursor:pointer;margin-top:12px;text-decoration:none;display:inline-block}
+    @media(max-width:900px){.grid,.triple,.result{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Page 3: Power Calculations in Three-Phase Systems</h1>
+    <p>This page shows how to calculate apparent power, active power, reactive power, and power factor.</p>
+  </header>
+  <nav>
+    <a href="4.html">Home</a>
+    <a href="6.html">Previous</a>
+    <a href="8.html">Next: Power Factor Improvement</a>
+    <a href="#equations">Equations</a>
+    <a href="#simple">Simple example</a>
+    <a href="#complex">Complex example</a>
+  </nav>
+
+  <main>
+    <section class="card" id="equations">
+      <h2>1. Main three-phase power equations</h2>
+      <div class="grid">
+        <div>
+          <p>For a balanced three-phase system using line values:</p>
+          <div class="formula">Apparent power: S = √3 V<sub>L</sub>I<sub>L</sub>   (VA)
+Active power:   P = √3 V<sub>L</sub>I<sub>L</sub>cosφ   (W)
+Reactive power: Q = √3 V<sub>L</sub>I<sub>L</sub>sinφ   (var)
+Power factor:   cosφ = P / S</div>
+          <div class="note">The angle φ is the angle between phase voltage and phase current. A lagging power factor usually indicates an inductive load.</div>
+        </div>
+        <div>
+          <div class="triple">
+            <div class="mini"><strong>Active power P</strong><p>This is the useful power converted into work, heat, or motion.</p></div>
+            <div class="mini"><strong>Reactive power Q</strong><p>This oscillates between the source and reactive elements such as coils and capacitors.</p></div>
+            <div class="mini"><strong>Apparent power S</strong><p>This is the total volt-ampere demand seen by the supply.</p></div>
+          </div>
+          <div class="ok" style="margin-top:16px"><strong>Power triangle:</strong> S² = P² + Q²</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="simple">
+      <h2>2. Simple worked example</h2>
+      <p><strong>Question:</strong> A balanced three-phase motor takes 400 V, 20 A at a power factor of 0.8 lagging. Find S, P, and Q.</p>
+      <div class="formula">S = √3 × 400 × 20 = 13.86 kVA
+P = √3 × 400 × 20 × 0.8 = 11.09 kW
+sinφ = √(1 - 0.8²) = 0.6
+Q = √3 × 400 × 20 × 0.6 = 8.31 kVAr</div>
+      <p>This example is simple because only one balanced load is involved and the line values are already known.</p>
+    </section>
+
+    <section class="card" id="complex">
+      <h2>3. More complex example: mixed load interpretation</h2>
+      <div class="grid">
+        <div>
+          <p>
+            Consider a small workshop supplied by a 400 V three-phase system. The workshop contains a motor group demanding 18 kW at 0.78 lagging power factor and heating loads demanding 6 kW at unity power factor.
+          </p>
+          <p>
+            The total active power is simply added:
+          </p>
+          <div class="formula">P<sub>total</sub> = 18 + 6 = 24 kW</div>
+          <p>
+            The reactive power of the heaters is تقريباً zero because their power factor is close to 1. For the motor group:
+          </p>
+          <div class="formula">tanφ = √(1 - 0.78²) / 0.78 = 0.8013
+Q<sub>motor</sub> = P tanφ = 18 × 0.8013 = 14.42 kVAr</div>
+          <p>So the total reactive power is about 14.42 kVAr, and the total apparent power becomes:</p>
+          <div class="formula">S = √(24² + 14.42²) = 28.00 kVA</div>
+          <p>Then the overall power factor is:</p>
+          <div class="formula">cosφ = P/S = 24 / 28 = 0.857 lagging</div>
+        </div>
+        <div>
+          <div class="note"><strong>Why this is more complex:</strong> the load is not a single device. The engineer must combine active and reactive power from different parts of the installation.</div>
+          <div class="ok" style="margin-top:14px"><strong>Engineering meaning:</strong> even when some loads are resistive, inductive machines can still make the whole system run at a lagging power factor.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>4. Interactive power calculator</h2>
+      <div class="grid">
+        <div>
+          <label for="vl">Line voltage V<sub>L</sub> (V)</label>
+          <input id="vl" type="number" value="400" />
+          <label for="il">Line current I<sub>L</sub> (A)</label>
+          <input id="il" type="number" value="20" />
+          <label for="pf">Power factor cosφ</label>
+          <input id="pf" type="number" value="0.8" step="0.01" min="0" max="1" />
+          <button class="btn" onclick="calcPower()">Calculate power</button>
+        </div>
+        <div class="result">
+          <div class="box"><strong>S</strong><div id="sVal">-</div></div>
+          <div class="box"><strong>P</strong><div id="pVal">-</div></div>
+          <div class="box"><strong>Q</strong><div id="qVal">-</div></div>
+          <div class="box"><strong>φ</strong><div id="phiVal">-</div></div>
+        </div>
+      </div>
+      <a class="btn" href="8.html">Move to Page 4: Power Factor Improvement</a>
+    </section>
+  </main>
+
+  <script>
+    function calcPower(){
+      const vl = Number(document.getElementById('vl').value);
+      const il = Number(document.getElementById('il').value);
+      const pf = Number(document.getElementById('pf').value);
+      const S = Math.sqrt(3)*vl*il/1000;
+      const P = S*pf;
+      const sinphi = Math.sqrt(Math.max(0,1-pf*pf));
+      const Q = S*sinphi;
+      const phi = Math.acos(Math.min(1,Math.max(0,pf)))*180/Math.PI;
+      document.getElementById('sVal').textContent = S.toFixed(2)+' kVA';
+      document.getElementById('pVal').textContent = P.toFixed(2)+' kW';
+      document.getElementById('qVal').textContent = Q.toFixed(2)+' kVAr';
+      document.getElementById('phiVal').textContent = phi.toFixed(2)+'°';
+    }
+    calcPower();
+  </script>
+</body>
+</html>
